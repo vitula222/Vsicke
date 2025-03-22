@@ -178,13 +178,13 @@ void Control() {
     }
     if (screen == 1) {
       if (mouse == 2) {
-        Send("PC");
+        Send("test");
       }
       if (mouse == 3) {
-        Send("led");
+        Send("test");
       }
       if (mouse == 4) {
-        Send("fan");
+        Send("test");
       }
       if (mouse == 5) {
         screen = 0;
