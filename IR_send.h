@@ -2,6 +2,7 @@
 
 void Send_IR_NEC(uint16_t adress, uint16_t date) {
   IrSender.sendNEC(adress, date, 0);
+  setup_oled();
 }
 
 
@@ -9,7 +10,6 @@ void IRRead() {
   if (IrReceiver.decode()) {
     command = IrReceiver.decodedIRData.command;
     Adress = IrReceiver.decodedIRData.address;
-    Date = IrReceiver.decodedIRData.decodedRawData;
     protocolInt = IrReceiver.decodedIRData.protocol;
     //Date = IrReceiver.decodedIRData.decodedRawData;
     switch(protocolInt)
@@ -86,6 +86,8 @@ void IRReplay() {
         IrSender.sendNEC(Adress, command, 0);
         break;
   }
+
+  setup_oled();
 
   
 }

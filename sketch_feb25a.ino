@@ -1,7 +1,10 @@
 #include <WiFi.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h> 
 #include <Tcp.h>
 #include <display.h>
 #include <IR_send.h>
+
 
 
 
@@ -11,9 +14,17 @@ bool b_1 = false;
 bool b_2 = false;
 bool b_3 = false;
 
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org", 19800,60000);
+
+
 void setup() {
+
   IrReceiver.begin(3);
   IrSender.begin(20);
+
+  setup_oled();
+
 
   pinMode(0, INPUT_PULLUP);
   pinMode(1, INPUT_PULLUP);
@@ -23,9 +34,6 @@ void setup() {
 
 
 
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    for (;;); // Don't proceed, loop forever
-  }
 
   display.setTextSize(1);
   display.setTextColor(WHITE);
@@ -55,11 +63,15 @@ void setup() {
     if (btnState1 && !b_2) {  // обработчик нажатия
       b_2 = true;
       if (mouse == 2) {
-        Wifi_Connect("X", "X");
+        Wifi_Connect("home_y", "63302202");
+        timeClient.begin();
+        timeClient.setTimeOffset(25200);
         return;
       }
       if (mouse == 3) {
-        Wifi_Connect("X", "X");
+        Wifi_Connect("vitula222", "123443215");
+        timeClient.begin();
+        timeClient.setTimeOffset(25200);
         return;
       }
       if (mouse == 4) {
@@ -96,44 +108,60 @@ void setup() {
   }
   //----------------------------------------------------------
 }
+
+bool btnState1 = false;
+
 void loop() {
   Control();
 
-  if (screen == 0) {
-    Menu();
+  switch(screen)
+  {
+    case 0: 
+        Menu();
+        return;
+    case 1: 
+        Home_Control();
+        return;
+    case 2: 
+        Hack();
+        return;
+    case 3: 
+        mhz433_menu();
+        return;
+    case 4: 
+        mhz433_RX();
+        return;
+    case 5: 
+        mhz433_TX();
+        return;
+    case 6: 
+        IR_menu();
+        return;
+    case 7:
+        IR_RX();
+        if (btnState1 == false) {
+          IRRead();
+        }
+        else {
+          delay(100);
+        }
+        return;
+    case 8: 
+        CD_card_menu();
+        return;
+    case 9: 
+        Attac_NRF();
+        return;
+    case 10: 
+        IR_TX();
+        return;
+    case 11: 
+        Game_menu(); 
+        return;
+    case 12: 
+        TV(); 
+        return;
   }
-  if (screen == 1) {
-    Home_Control();
-  }
-  if (screen == 2) {
-    Hack();
-  }
-  if (screen == 3) {
-    mhz433_menu();
-  }
-  if (screen == 4){
-    mhz433_RX();
-  }
-  if (screen == 5){
-    mhz433_TX();
-  }
-  if (screen == 6) {
-    IR_menu();
-  }
-  if (screen == 7) {
-    IR_RX();
-    IRRead();
-  }
-  if (screen == 8) {
-    CD_card_menu();
-  }
-  if (screen == 9) {
-    Attac_NRF();
-  }
-  if (screen == 10) {
-    IR_TX();
-  }
-
 
 }
 
@@ -159,139 +187,10 @@ void Control() {
     //Serial.println("release");
   }
 
-  bool btnState1 = !digitalRead(1);
+  btnState1 = !digitalRead(1);
   if (btnState1 && !b_2) {  // обработчик нажатия
     b_2 = true;
-    if (screen == 0) {
-      if (mouse == 2) {
-        screen = 1;
-        return;
-      }
-      if (mouse == 3) {
-        screen = 2;
-        return;
-      }
-      if (mouse == 4) {
-        screen = 8;
-        return;
-      }
-    }
-    if (screen == 1) {
-      if (mouse == 2) {
-        Send("test");
-      }
-      if (mouse == 3) {
-        Send("test");
-      }
-      if (mouse == 4) {
-        Send("test");
-      }
-      if (mouse == 5) {
-        screen = 0;
-      }
-    }
-    if (screen == 2){
-      if (mouse == 2) {
-        screen = 6;
-        return;
-      }
-      if (mouse == 3) {
-        screen = 3;
-        return;
-      }
-      if (mouse == 4) {
-        screen = 9;
-        return;
-      }
-      if (mouse == 5) {
-        screen = 0;
-        return;
-      }
-    }
-    if (screen == 3) {
-      if (mouse == 2) {
-        //mySwitch.enableReceive(4); 
-        screen = 4;
-        return;
-      }
-      if (mouse == 3) {
-        screen = 5;
-        return;
-      }
-      if (mouse == 4) {
-        screen = 0;
-        return;
-      }
-    }
-    if (screen == 4) {
-      if (mouse == 3) {
-        screen = 3;
-        return;
-      }
-    }
-
-    if (screen == 5) {
-      if (mouse == 3) {
-        screen = 3;
-        return;
-      }
-    }
-
-    if (screen == 6) {
-      if (mouse == 2) {
-        screen = 7;
-        return;
-      }
-      if (mouse == 3) {
-        screen = 10;
-        return;
-      }
-      if (mouse == 4) {
-        screen = 3;
-        return;
-      }
-    }
-
-    if (screen == 7) {
-      if (mouse == 4) {
-        IRReplay();
-      }
-      if (mouse == 5) {
-        screen = 0;
-        return;
-      }
-    }
-
-    if (screen == 8) {
-      if (mouse == 5) {
-        screen = 0;
-        return;
-      }
-    }
-    if (screen == 9) {
-      if (mouse == 2) {
-        screen = 0;
-        return;
-      }
-    }
-    if (screen == 10) {
-      if (mouse == 2) {
-        Send_IR_NEC(0x4, 0x8);
-        return;
-      }
-      if (mouse == 3) {
-        Send_IR_NEC(0xB7A0, 0xE9);
-        return;
-      }
-      if (mouse == 4) {
-        Send_IR_NEC(0x1308, 0x60);
-        return;
-      }
-      if (mouse == 5) {
-        screen = 6;
-        return;
-      }
-    }
+    screen_main();
 
   }
   if (!btnState1 && b_2) {  // обработчик отпускания
@@ -312,4 +211,204 @@ void Control() {
 
 
 }
+
+void time() {
+  timeClient.update();
+
+  hh = timeClient.getHours();
+  mm = timeClient.getMinutes();
+}
+
+void screen_main() {
+  if (screen == 0) {
+    switch(mouse)
+    {
+      case 2: 
+          screen = 1;
+          return;
+      case 3: 
+          screen = 2;
+          return;
+      case 4: 
+          screen = 8;
+          return;
+      case 5: 
+          screen = 11;
+          return;
+    }
+  }
+  if (screen == 1) {
+    switch(mouse)
+    {
+      case 2: 
+          Send("PC");
+          return;
+      case 3: 
+          Send("led");
+          return;
+      case 4: 
+          Send("fan");
+          return;
+      case 5: 
+          screen = 0;
+          return;
+    }
+  }
+  if (screen == 2){
+    switch(mouse)
+    {
+      case 2: 
+          screen = 6;
+          return;
+      case 3: 
+          screen = 3;
+          return;
+      case 4: 
+          screen = 9;
+          return;
+      case 5: 
+          screen = 0;
+          return;
+    }
+  }
+  if (screen == 3) {
+    switch(mouse)
+    {
+      case 2: 
+          screen = 4;
+          return;
+      case 3: 
+          screen = 5;
+          return;
+      case 4: 
+          screen = 2;
+          return;
+    }
+  }
+  if (screen == 4) {
+    switch(mouse)
+    {
+      case 3: 
+          screen = 3;
+          return;
+    }
+  }
+
+  if (screen == 5) {
+    switch(mouse)
+    {
+      case 3: 
+          screen = 3;
+          return;
+    }
+  }
+
+  if (screen == 6) {
+    switch(mouse)
+    {
+      case 2: 
+          screen = 7;
+          return;
+      case 3:
+          screen = 10;
+          return;
+      case 4:
+          screen = 3;
+          return;
+
+    }
+  }
+
+  if (screen == 7) {
+    switch(mouse)
+    {
+      case 4: 
+          IRReplay();
+          return;
+      case 5:
+          screen = 6;
+          return;
+    }
+  }
+
+  if (screen == 8) {
+    switch(mouse)
+    {
+      case 5: 
+          screen = 0;
+          return;
+    }
+  }
+
+  if (screen == 9) {
+    switch(mouse)
+    {
+      case 2: 
+          screen = 0;
+          return;
+    }
+  }
+
+  if (screen == 10) {
+    switch(mouse)
+    {
+      case 2: 
+          //Send_IR_NEC(0x4, 0x8);
+          screen = 12;
+          return;
+      case 3: 
+          Send_IR_NEC(0xB7A0, 0xE9);
+          return;
+      case 4: 
+          Send_IR_NEC(0x4E87, 0x17);
+          return;
+      case 5: 
+          screen = 6;
+          return;
+    }
+  }
+
+  if (screen == 11) {
+
+    switch(mouse)
+    {
+      case 5: 
+          screen = 0;
+          return;
+    }
+  }
+
+  if (screen == 12) {
+    if (scrol == 0) {
+      switch(mouse)
+      {
+        case 2: 
+            screen = 10;
+            return;
+        case 3: 
+            Send_IR_NEC(0x4, 0x8);
+            return;
+        case 4: 
+            Send_IR_NEC(0x4, 0x2);
+            return;
+        case 5: 
+            Send_IR_NEC(0x4, 0x3);
+            return;
+      }
+    }
+
+    if (scrol == 1) {
+      switch(mouse)
+      {
+        case 2: 
+            Send_IR_NEC(0x4, 0x0);
+            return;
+        case 3: 
+            Send_IR_NEC(0x4, 0x1);
+            return;
+      }
+    }
+  }
+}
+
 

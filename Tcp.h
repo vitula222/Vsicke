@@ -1,6 +1,6 @@
 void Send(String date) {
-  char* ip = "localhost";
-  String tcp_URL = "send.";
+  char* ip = "192.168.31.251";
+  String tcp_URL = "swich.local.";
 
   WiFiClient client;
   String str = tcp_URL + date +"\n";
