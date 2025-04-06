@@ -241,13 +241,13 @@ void screen_main() {
     switch(mouse)
     {
       case 2: 
-          Send("PC");
+          Send("");
           return;
       case 3: 
-          Send("led");
+          Send("");
           return;
       case 4: 
-          Send("fan");
+          Send("");
           return;
       case 5: 
           screen = 0;
