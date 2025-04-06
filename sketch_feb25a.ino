@@ -63,13 +63,13 @@ void setup() {
     if (btnState1 && !b_2) {  // обработчик нажатия
       b_2 = true;
       if (mouse == 2) {
-        Wifi_Connect("home_y", "63302202");
+        Wifi_Connect("", "");
         timeClient.begin();
         timeClient.setTimeOffset(25200);
         return;
       }
       if (mouse == 3) {
-        Wifi_Connect("vitula222", "123443215");
+        Wifi_Connect("", "");
         timeClient.begin();
         timeClient.setTimeOffset(25200);
         return;
