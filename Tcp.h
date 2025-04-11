@@ -1,5 +1,5 @@
 void Send(String date) {
-  char* ip = "0.0.0.0";
+  char* ip = "";
   String tcp_URL = "swich.local.";
 
   WiFiClient client;

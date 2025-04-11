@@ -375,7 +375,12 @@ void Game_menu() {
   display.println(">");
 
 
+  display.setCursor(6, 20);
+  display.println("Ball");
+  display.setCursor(6, 30);
+  display.println("PinBall");
 
+  
   display.setCursor(6, 50);
   display.println("Exit");
 

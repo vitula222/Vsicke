@@ -4,7 +4,7 @@
 #include <Tcp.h>
 #include <display.h>
 #include <IR_send.h>
-
+#include <games.h>
 
 
 
@@ -16,6 +16,7 @@ bool b_3 = false;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", 19800,60000);
+
 
 
 void setup() {
@@ -161,6 +162,12 @@ void loop() {
     case 12: 
         TV(); 
         return;
+    case 13: 
+        ball();
+        return;
+    case 14: 
+        pinball();
+        return;
   }
 
 }
@@ -181,6 +188,7 @@ void Control() {
   if (btnState2 && !b_1) {  // обработчик нажатия
     b_1 = true;
     mouse -= 1;
+
   }
   if (!btnState2 && b_1) {  // обработчик отпускания
     b_1 = false;  
@@ -372,6 +380,12 @@ void screen_main() {
 
     switch(mouse)
     {
+      case 2: 
+          screen = 13;
+          return;
+      case 3: 
+          screen = 14;
+          return;
       case 5: 
           screen = 0;
           return;
@@ -408,6 +422,15 @@ void screen_main() {
             return;
       }
     }
+  }
+
+
+  if (screen == 13) {
+    screen = 11;
+  }
+  
+  if (screen == 14) {
+    screen = 11;
   }
 }
 
